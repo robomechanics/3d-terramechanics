@@ -1,0 +1,1 @@
+These scripts compute the 2D shape of the profile left behind a driving wheel. They are run within the terramechanics model.
