@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<addonCore>
+
+  <label>Pack &amp; Unpack variables to &amp; from structures with enhanced functionality</label>
+
+  <version>1.14</version>
+
+  <type>Toolbox</type>
+
+  <identifier>e57adb5c-4a80-11e4-9553-005056977bd0</identifier>
+
+  <summary>v2struct packs and unpacks variables to and from structures with enhanced functionality.</summary>
+
+  <description>v2struct has dual functionality in packing &amp; unpacking variables into structures and vice versa, according to the syntax and inputs. 
+Function features:
+   * Pack variables to structure with enhanced field naming
+   * Pack and update variables in existing structure
+   * Unpack variables from structure with enhanced variable naming
+   * Unpack only specific fields in a structure to variables
+   * Unpack without over writing existing variables in workspace
+
+In addition to the obvious usage, this function could by highly useful for example in working with a function with multiple inputs. Packing variables before the call to the function, and unpacking it in the beginning of the function will make the function call shorter, more readable, and you would not have to worry about arguments order any more. Moreover you could leave the function as it is and you could pass same inputs to multiple functions, each of which will use its designated arguments placed in the structure.
+
+Moreover, the function enables extracting specific fields from a structure according to field names. This enhances the flexibility and ease of use of structures, for example it allows you to pass same inputs as structures to multiple functions, each of which will use its designated
+arguments placed in the structure.
+
+Some examples:
+ Simple pack:
+       x = zeros(3);
+       y = 'Testing123';
+       z = cell(2,3);
+       fieldNames1 = {'fieldnames','x','y','z'};
+       fieldNames2 = {'fieldnames','a','b','c'};
+   
+   &gt;&gt; S = v2struct(x,y,z)
+   S = 
+       x: [3x3 double]
+       y: 'Testing123'
+       z: {2x3 cell}
+
+ pack with different field names:
+   &gt;&gt; S = v2struct(x,y,z, fieldNames2)
+   S = 
+       a: [3x3 double]
+       b: 'Testing123'
+       c: {2x3 cell}
+
+ update existing structure with additional field:
+   &gt;&gt; S.oldField = 'field to be saved for future use'
+   &gt;&gt; S = v2struct(x2, nameOfStruct2Update, fieldNames3)
+   S = 
+    oldField: 'field to be saved for future use'
+           x: [3x3 double]
+
+ simple unpack:
+       S.x = zeros(3);
+       S.y = 'Testing123';
+       S.z = cell(2,3);
+       fieldNames3 = {'y'};
+   &gt;&gt;  v2struct(S)
+       y
+   y =
+   Testing123
+
+
+More examples, further comments and demo usage are available inside the .m file and the demo functions.
+
+Comments, suggestions, bug reports and any other feedback is welcomed at adi.navve[at]gmail[dot]com
+
+
+Inspired by the function 'mmv2truct' from the Mastering Matlab Toolbox (available free) by D.C. Hanselman, University of Maine, Orono, ME 04469 4/28/99, 9/29/99, renamed 10/19/99 Mastering MATLAB 5, Prentice Hall, ISBN 0-13-858366-8
+available at: http://www.eece.maine.edu/mm/MM6/tbx.html
+
+Other Requirements
+
+None.</description>
+
+  <createdBy name="Adi Navve"/>
+
+  <image>resources/screenshot.png</image>
+
+</addonCore>
