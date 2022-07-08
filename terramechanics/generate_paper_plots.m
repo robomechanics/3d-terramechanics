@@ -152,7 +152,7 @@ if ~exist('fig')
     end
     for i=1:N
         ax(2,i) = nexttile;
-        axis([-1.1 1 -50 10])
+        axis([-1.1 1 -10 50])
         hold on
         ylabel('$F_y$ (N)', 'FontSize', 16)
         if i>1

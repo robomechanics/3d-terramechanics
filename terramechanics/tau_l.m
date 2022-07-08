@@ -9,7 +9,7 @@ v_y = params.state.v_y;
 jt = j_t(params, theta);
 jl = j_l(params, theta);
 
-vjl = v_y;
+vjl = -v_y;
 
 vjt = v_jt(params,theta);
 

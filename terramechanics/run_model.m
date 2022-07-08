@@ -24,11 +24,11 @@ theta_m0s = zeros(size(Fz_data));
 theta_r0s = zeros(size(Fz_data));
 for k=1:length(betas)
     V = V_data(1,k)/1000;
-    params.state.beta = -deg2rad(betas(k)); %We don't use the actual measured angle because they are very very close, but the case where we get beta sliiightly less than 0 breaks things
+    params.state.beta = deg2rad(betas(k)); %We don't use the actual measured angle because they are very very close, but the case where we get beta sliiightly less than 0 breaks things
     beta = params.state.beta;
     params.state.w = V/params.rover.r_s;          %Set slip ratio to 0 [rad/s]
     params.state.v_x = V*cos(beta);               %Forward velocity of wheel [m/s]
-    params.state.v_y = V*sin(beta);               %Sideways velocity of wheel [m/s]
+    params.state.v_y = -V*sin(beta);               %Sideways velocity of wheel [m/s]
 
     %set tuned a and b values
     params.tuned.a0 = a0s(1,k);
@@ -51,11 +51,11 @@ for j=1:length(Vrys)
     for k=1:length(betas)
         %set state params
         V = V_data(j,k)/1000;
-        params.state.beta = -deg2rad(betas(k)); %We don't use the actual measured angle because they are very very close, but the case where we get beta sliiightly less than 0 breaks things
+        params.state.beta = deg2rad(betas(k)); %We don't use the actual measured angle because they are very very close, but the case where we get beta sliiightly less than 0 breaks things
         beta = params.state.beta;
         params.state.w = Vry_data(j,k)/1000/r;       %Rotational (angular) velocity of wheel [rad/s]
         params.state.v_x = V*cos(beta);               %Forward velocity of wheel [m/s]
-        params.state.v_y = V*sin(beta);               %Sideways velocity of wheel [m/s]
+        params.state.v_y = -V*sin(beta);               %Sideways velocity of wheel [m/s]
 
         %set tuned a and b values
         params.tuned.a0 = a0s(j,k);

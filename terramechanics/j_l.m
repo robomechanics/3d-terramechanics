@@ -9,7 +9,7 @@ w = params.state.w;
 v_y = params.state.v_y;
 
 
-v_jy = v_y;
+v_jy = -v_y;
 
 j = (theta_f - theta)*v_jy/w; %classic defn
 %to avoid 0*0/0 = Inf, manually assign those values:

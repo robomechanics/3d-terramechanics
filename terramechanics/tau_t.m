@@ -6,7 +6,7 @@ phi = params.soil.phi;
 K = params.soil.K;
 v_y = params.state.v_y;
 
-vjl = v_y;
+vjl = -v_y;
 
 vjt = v_jt(params,theta);
 jt = j_t(params, theta);
