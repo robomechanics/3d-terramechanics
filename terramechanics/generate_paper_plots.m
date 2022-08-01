@@ -12,21 +12,27 @@ wheel_g = 'K10_mini_grouser';
 wheel_s = 'K10_mini_smooth';
 
 %Load and average grousered data
-load('trench_off_grouser.mat')
+load('trench_off_grouser.mat') %Processed data for modeling
 all_results_g = tuned_results;
-[Fx_data_g, Fy_data_g, Fz_data_g, Z_data_g, slip_data_g, V_data_g, Vry_data_g, angle_data_g, a0s_g, a1s_g, b0s_g, b1s_g, theta_m0s_g, theta_r0s_g] = average_data_to_model(all_results_g, betas, Vrys);
+[Fx_data_g, Fy_data_g, Fz_data_g, Z_data_g, slip_data_g, V_data_g, Vry_data_g, angle_data_g, a0s_g, a1s_g, b0s_g, b1s_g] = average_data_to_model(all_results_g, betas, Vrys);
+load('all_grouser_data.mat') %Individual data points for plotting
+points_g = all_results;
+[points_beta_index_g, points_slip_data_g, points_Fx_data_g, points_Fy_data_g, points_Z_data_g] = sort_data_to_plot(points_g, betas, Vrys);
 
 %Load and average smooth data
-load('trench_off_smooth.mat')
+load('trench_off_smooth.mat') %Processed data for modeling
 all_results_s = tuned_results;
-[Fx_data_s, Fy_data_s, Fz_data_s, Z_data_s, slip_data_s, V_data_s, Vry_data_s, angle_data_s, a0s_s, a1s_s, b0s_s, b1s_s, theta_m0s_s, theta_r0s_s] = average_data_to_model(all_results_s, betas, Vrys);
+[Fx_data_s, Fy_data_s, Fz_data_s, Z_data_s, slip_data_s, V_data_s, Vry_data_s, angle_data_s, a0s_s, a1s_s, b0s_s, b1s_s] = average_data_to_model(all_results_s, betas, Vrys);
+load('all_smooth_data.mat'); %Individual data points for plotting
+points_s = all_results;
+[points_beta_index_s, points_slip_data_s, points_Fx_data_s, points_Fy_data_s, points_Z_data_s] = sort_data_to_plot(points_s, betas, Vrys);
 
-%Run model with grousers 
+%Run model with grousers
 [all_params_gi, Fx_approx_gi, Fy_approx_gi, h_gi, sinkage_found_gi] = run_model(wheel_g, betas, Vrys, 1, 1, Fz_data_g, V_data_g, Vry_data_g, a0s_g, a1s_g, b0s_g, b1s_g); %Grousered, Ishigami
 [all_params_gn, Fx_approx_gn, Fy_approx_gn, h_gn, sinkage_found_gn] = run_model(wheel_g, betas, Vrys, 0, 0, Fz_data_g, V_data_g, Vry_data_g, a0s_g, a1s_g, b0s_g, b1s_g); %Grousered, no trench
 [all_params_gt, Fx_approx_gt, Fy_approx_gt, h_gt, sinkage_found_gt] = run_model(wheel_g, betas, Vrys, 1, 0, Fz_data_g, V_data_g, Vry_data_g, a0s_g, a1s_g, b0s_g, b1s_g); %Grousered, trench
 
-%Run model with smooth wheel 
+%Run model with smooth wheel
 [all_params_si, Fx_approx_si, Fy_approx_si, h_si, sinkage_found_si] = run_model(wheel_s, betas, Vrys, 1, 1, Fz_data_s, V_data_s, Vry_data_s, a0s_s, a1s_s, b0s_s, b1s_s); %Smooth, Ishigami
 [all_params_sn, Fx_approx_sn, Fy_approx_sn, h_sn, sinkage_found_sn] = run_model(wheel_s, betas, Vrys, 0, 0, Fz_data_s, V_data_s, Vry_data_s, a0s_s, a1s_s, b0s_s, b1s_s); %Smooth, no trench
 [all_params_st, Fx_approx_st, Fy_approx_st, h_st, sinkage_found_st] = run_model(wheel_s, betas, Vrys, 1, 0, Fz_data_s, V_data_s, Vry_data_s, a0s_s, a1s_s, b0s_s, b1s_s); %Smooth, trench
@@ -50,14 +56,14 @@ fprintf('Smooth, trench:\n')
 print_tables(all_params_st, betas, avg_Fx_error_norm_st, std_Fx_error_norm_st, avg_Fy_error_norm_st, std_Fy_error_norm_st, avg_Z_error_norm_st, std_Z_error_norm_st, a0s_s, a1s_s, b0s_s, b1s_s); %Smooth, trench
 
 %Grousered force and sinkage plot
-[fig_g, ax_g, tiles_g] = force_sinkage_plot(all_params_gi, betas, Vrys, slip_data_g, Fx_data_g, Fy_data_g, Z_data_g, Fx_approx_gi, Fy_approx_gi, h_gi, sinkage_found_gi); %Grousered, Ishigami
-force_sinkage_plot(all_params_gn, betas, Vrys, slip_data_g, Fx_data_g, Fy_data_g, Z_data_g, Fx_approx_gn, Fy_approx_gn, h_gn, sinkage_found_gn, fig_g, ax_g, tiles_g); %Grousered, no trench
-force_sinkage_plot(all_params_gt, betas, Vrys, slip_data_g, Fx_data_g, Fy_data_g, Z_data_g, Fx_approx_gt, Fy_approx_gt, h_gt, sinkage_found_gt, fig_g, ax_g, tiles_g); %Grousered, trench
+[fig_g, ax_g, tiles_g] = force_sinkage_plot(all_params_gi, betas, Vrys, slip_data_g, points_beta_index_g, points_slip_data_g, points_Fx_data_g, points_Fy_data_g, points_Z_data_g, Fx_approx_gi, Fy_approx_gi, h_gi, sinkage_found_gi); %Grousered, Ishigami
+force_sinkage_plot(all_params_gn, betas, Vrys, slip_data_g, points_beta_index_g, points_slip_data_g, points_Fx_data_g, points_Fy_data_g, points_Z_data_g, Fx_approx_gn, Fy_approx_gn, h_gn, sinkage_found_gn, fig_g, ax_g, tiles_g); %Grousered, no trench
+force_sinkage_plot(all_params_gt, betas, Vrys, slip_data_g, points_beta_index_g, points_slip_data_g, points_Fx_data_g, points_Fy_data_g, points_Z_data_g, Fx_approx_gt, Fy_approx_gt, h_gt, sinkage_found_gt, fig_g, ax_g, tiles_g); %Grousered, trench
 
 %Smooth force and sinkage plot
-[fig_s, ax_s, tiles_s] = force_sinkage_plot(all_params_si, betas, Vrys, slip_data_s, Fx_data_s, Fy_data_s, Z_data_s, Fx_approx_si, Fy_approx_si, h_si, sinkage_found_si); %Smooth, Ishigami
-force_sinkage_plot(all_params_sn, betas, Vrys, slip_data_s, Fx_data_s, Fy_data_s, Z_data_s, Fx_approx_sn, Fy_approx_sn, h_sn, sinkage_found_sn, fig_s, ax_s, tiles_s); %Smooth, no trench
-force_sinkage_plot(all_params_st, betas, Vrys, slip_data_s, Fx_data_s, Fy_data_s, Z_data_s, Fx_approx_st, Fy_approx_st, h_st, sinkage_found_st, fig_s, ax_s, tiles_s); %Smooth, trench
+[fig_s, ax_s, tiles_s] = force_sinkage_plot(all_params_si, betas, Vrys, slip_data_s, points_beta_index_s, points_slip_data_s, points_Fx_data_s, points_Fy_data_s, points_Z_data_s, Fx_approx_si, Fy_approx_si, h_si, sinkage_found_si); %Smooth, Ishigami
+force_sinkage_plot(all_params_sn, betas, Vrys, slip_data_s, points_beta_index_s, points_slip_data_s, points_Fx_data_s, points_Fy_data_s, points_Z_data_s, Fx_approx_sn, Fy_approx_sn, h_sn, sinkage_found_sn, fig_s, ax_s, tiles_s); %Smooth, no trench
+force_sinkage_plot(all_params_st, betas, Vrys, slip_data_s, points_beta_index_s, points_slip_data_s, points_Fx_data_s, points_Fy_data_s, points_Z_data_s, Fx_approx_st, Fy_approx_st, h_st, sinkage_found_st, fig_s, ax_s, tiles_s); %Smooth, trench
 
 %Legend plot
 legend_plot();
@@ -100,7 +106,8 @@ matrix2latex(abtable, 2);
 fprintf('\n')
 end
 
-function [fig, ax, tiles] = force_sinkage_plot(all_params, betas, Vrys, slip_data, Fx_data, Fy_data, Z_data, Fx_approx, Fy_approx, h, sinkage_found, fig, ax, tiles)
+
+function [fig, ax, tiles] = force_sinkage_plot(all_params, betas, Vrys, avg_slip_data, points_beta_index, points_slip_data, points_Fx_data, points_Fy_data, points_Z_data, Fx_approx, Fy_approx, h, sinkage_found, fig, ax, tiles)
 %Plot model computed forces and sinkages vs measured data
 params = all_params(1);
 if params.options.trench_on == 1 && params.options.ishigami_sidewall == 0
@@ -181,11 +188,11 @@ for j = 1:length(Vrys)
         if sinkage_found(j,k) == 0 && params.options.ishigami_sidewall == 0
             marker = '*k';
             failed_sinkages = failed_sinkages + 1;
-            plot(ax(1,k), slip_data(j,k), 1000*Fx_approx(j,k), marker, 'MarkerEdgeColor', dotcolor)
+            plot(ax(1,k), avg_slip_data(j,k), 1000*Fx_approx(j,k), marker, 'MarkerEdgeColor', dotcolor)
 
-            plot(ax(2,k), slip_data(j,k), 1000*Fy_approx(j,k), marker, 'MarkerEdgeColor', dotcolor)
+            plot(ax(2,k), avg_slip_data(j,k), 1000*Fy_approx(j,k), marker, 'MarkerEdgeColor', dotcolor)
 
-            plot(ax(3,k), slip_data(j,k), 1000*h(j,k), marker, 'MarkerEdgeColor', dotcolor)
+            plot(ax(3,k), avg_slip_data(j,k), 1000*h(j,k), marker, 'MarkerEdgeColor', dotcolor)
         end
     end
 end
@@ -193,36 +200,42 @@ end
 for i=1:N
     % Plot x force model
     if params.options.ishigami_sidewall == 0
-        plot(ax(1,i), slip_data(:,i), 1000*Fx_approx(:,i), 'LineStyle', linestyle, 'Color', linecolor, 'LineWidth', 2)
+        plot(ax(1,i), avg_slip_data(:,i), 1000*Fx_approx(:,i), 'LineStyle', linestyle, 'Color', linecolor, 'LineWidth', 2)
     end
 end
 
 for i=1:N
     %plot y force model
-    plot(ax(2,i), slip_data(:,i), 1000*Fy_approx(:,i), 'LineStyle', linestyle, 'Color', linecolor, 'LineWidth', 2)
+    plot(ax(2,i), avg_slip_data(:,i), 1000*Fy_approx(:,i), 'LineStyle', linestyle, 'Color', linecolor, 'LineWidth', 2)
 end
 
 for i=1:N
     %plot z force model
     if params.options.ishigami_sidewall == 0
-        plot(ax(3,i), slip_data(:,i), 1000*h(:,i), 'LineStyle', linestyle, 'Color', linecolor, 'LineWidth', 2)
+        plot(ax(3,i), avg_slip_data(:,i), 1000*h(:,i), 'LineStyle', linestyle, 'Color', linecolor, 'LineWidth', 2)
     end
 end
 
 %Plot the raw data as dots
-for i=1:N
+for i=1:length(points_Fx_data)
     % Plot x force data
-    plot(ax(1,i), slip_data(:,i), Fx_data(:,i), 'o', 'MarkerEdgeColor', dotcolor)
+    if points_beta_index(i) <= N
+        plot(ax(1,points_beta_index(i)), points_slip_data(i), points_Fx_data(i), 'o', 'MarkerEdgeColor', dotcolor)
+    end
 end
 
-for i=1:N
+for i=1:length(points_Fy_data)
     %plot y force data
-    plot(ax(2,i), slip_data(:,i), Fy_data(:,i), 'o', 'MarkerEdgeColor', dotcolor)
+    if points_beta_index(i) <= N
+        plot(ax(2,points_beta_index(i)), points_slip_data(i), points_Fy_data(i), 'o', 'MarkerEdgeColor', dotcolor)
+    end
 end
 
-for i=1:N
+for i=1:length(points_Z_data)
     %plot z force data
-    plot(ax(3,i), slip_data(:,i), Z_data(:,i), 'o', 'MarkerEdgeColor', dotcolor)
+    if points_beta_index(i) <= N
+        plot(ax(3,points_beta_index(i)), points_slip_data(i), points_Z_data(i), 'o', 'MarkerEdgeColor', dotcolor)
+    end
 end
 
 bigax = axes(fig, 'visible', 'off');
@@ -239,7 +252,7 @@ hold on
 plot(NaN, NaN, 'LineStyle', ':', 'Color', cmuColor('red-web'), 'LineWidth', 2);
 plot(NaN, NaN, 'LineStyle', '-', 'Color', cmuColor('palladian-green'), 'LineWidth', 2);
 plot(NaN, NaN, 'LineStyle', '--', 'Color', cmuColor('sky-blue'), 'LineWidth', 2);
-leg = legend('With soil flow','Without soil flow','Ishigami 2007');
+leg = legend('With soil flow','Without soil flow','Ishigami 2007', 'FontSize', 16);
 leg.Location = 'north';
 leg.Orientation = 'horizontal';
 axis off
@@ -268,8 +281,8 @@ nexttile
 coeffs = coeffvalues(a0s_fit);
 hold on
 title('$a_0$')
-plot(betas, a0s(1,:), 'Color', cmuColor('dark-gray'))
-plot(betas, coeffs(2) + coeffs(1)*betas, 'Color', cmuColor('red-web'))
+plot(betas, a0s(1,:), 'Color', cmuColor('palladian-green'), 'Linewidth', 2)
+plot(betas, coeffs(2) + coeffs(1)*betas, 'Color', cmuColor('red-web'), 'LineStyle', ':', 'Linewidth', 2)
 hold off
 xticks([0 45 90])
 xlabel('$\beta$ (degrees)', 'FontSize', 14)
@@ -280,8 +293,8 @@ nexttile
 coeffs = coeffvalues(a1s_fit);
 hold on
 title('$a_1$')
-plot(betas, a1s(1,:), 'Color', cmuColor('dark-gray'))
-plot(betas, coeffs(2) + coeffs(1)*betas, 'Color', cmuColor('red-web'))
+plot(betas, a1s(1,:), 'Color', cmuColor('palladian-green'), 'Linewidth', 2)
+plot(betas, coeffs(2) + coeffs(1)*betas, 'Color', cmuColor('red-web'), 'Linestyle', ':', 'LineWidth', 2)
 hold off
 xticks([0 45 90])
 xlabel('$\beta$ (degrees)', 'FontSize', 14)
@@ -291,4 +304,67 @@ axis([0 90 -.1 1])
 leg = legend('Tuned values', 'Linear fit') ;
 leg.Layout.Tile ='south';
 leg.Orientation = 'horizontal';
+legend 'boxoff'
+end
+
+
+function [points_beta_index, points_slip_data, points_Fx_data, points_Fy_data, points_Z_data] = sort_data_to_plot(points, betas, Vrys)
+points_beta_index = zeros(size(points));
+points_slip_data = zeros(size(points));
+points_Fx_data = zeros(size(points));
+points_Fy_data = zeros(size(points));
+points_Z_data  = zeros(size(points));
+for i=1:length(points)
+    point = points(i);
+    points_slip_data(i) = point.slip;
+    points_Fx_data(i) = -point.avg_Fy;
+    points_Fy_data(i) = point.avg_Fx;
+    points_Z_data(i)  = -point.avg_Z;
+    for j=1:length(betas)
+        if point.beta == betas(j)
+            points_beta_index(i) = j;
+        end
+    end
+end
+
+%compute spread
+temp = [];
+Fx = [];
+Fy = [];
+Fz = [];
+Z = [];
+for j=1:length(betas)
+    for k=1:length(Vrys)
+        for i=1:length(points)
+            datapt = points(i);
+            if (datapt.beta == betas(j) && datapt.Vry == Vrys(k))
+                temp = [temp, datapt];
+            end
+        end
+        for m=1:length(temp)
+            datapt = temp(m);
+            Fx = [Fx, -datapt.avg_Fy];
+            Fy = [Fy, datapt.avg_Fx];
+            Fz = [Fz, -datapt.avg_Fz];
+            Z = [Z, -datapt.avg_Z];
+        end
+        Fx_means(j,k) = mean(Fx);
+        Fx_stds(j,k) = std(Fx);
+        Fx_spread(j,k) = max(Fx) - min(Fx);
+        Fy_means(j,k) = mean(Fy);
+        Fy_stds(j,k) = std(Fy);
+        Fy_spread(j,k) = max(Fy) - min(Fy);
+        Fz_means(j,k) = mean(Fz);
+        Fz_stds(j,k) = std(Fz);
+        Fz_spread(j,k) = max(Fz) - min(Fz);
+        Z_means(j,k) = mean(Z);
+        Z_stds(j,k) = std(Z);
+        Z_spread(j,k) = max(Z) - min(Z);
+        temp = [];
+        Fx = [];
+        Fy = [];
+        Fz = [];
+        Z = [];
+    end
+end
 end

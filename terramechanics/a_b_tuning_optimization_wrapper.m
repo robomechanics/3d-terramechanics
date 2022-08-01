@@ -8,7 +8,7 @@ tuned_results = [];
 Vrys = [0 3 5 8 10 12 20 40 100];
 betas = [0 15 30 45 60 75 90];
 % betas = [0]
-
+pool = gcp;
 exitflag = zeros(length(betas));
 
 %Set starting values, data path, and rover parameters:
@@ -21,30 +21,30 @@ x0s = [0.37   0.50   -0.17   -0.01   0.26   -0.12    0.021    1.14    1.45    0.
        0.76   0.12   -0.32   -0.10   0.84   -0.35    0.021    1.14    1.45    0.005    .75;... %60
        0.84   0.09   -0.48   -0.08   1.07   -0.61    0.021    1.14    1.45    0.005    .75;... %75
        0.91   0.07   -0.99   -0.01   1.53   -1.68    0.021    1.14    1.45    0.005    .75]'; %90
-filepath = '../../terramech-testbed/nptm_control/process_data/all_smooth_data_2.mat'; %load smooth data
+filepath = 'all_smooth_data.mat'; %load smooth data
 rovername = 'K10_mini_smooth'; %smooth wheel
 
 % %Grousered wheel:
 % %Starting guesses, x = [a0 a1 b0 b1 theta_m0 theta_r0 K c n0 n1 n2]
-% x0s = [0.36   0.57   -0.72   -0.10    0.26   -0.51    0.0107    .10     1.45     0.05    .7;... %0
-%        0.44   0.47   -0.59   -0.34    0.33   -0.45    0.021    1.14    1.45    0.005    .75;... %15
-%        0.59   0.31   -0.45   -0.55    0.50   -0.39    0.021    1.14    1.45    0.005    .75;... %30
-%        0.70   0.20   -0.44   -0.56    0.68   -0.43    0.021    1.14    1.45    0.005    .75;... %45
-%        0.77   0.14   -0.44   -0.56    0.85   -0.49    0.021    1.14    1.45    0.005    .75;... %60
-%        0.83   0.07   -0.40   -0.57    1.06   -0.51    0.021    1.14    1.45    0.005    .75;... %75
-%        0.93   0.04   -0.40   -0.50    1.58   -0.51    0.021    1.14    1.45    0.005    .75]'; %90
-% filepath = '../../terramech-testbed/nptm_control/process_data/all_grouser_data_2.mat'; %load grouser data
-% rovername = 'K10_mini'; %Grousered wheel
+% x0s = [0.2755   0.6764   -0.6648   -0.1126    0.1865   -0.4918    0.021    1.14    1.45    0.005    .75;... %0
+%        0.2984   0.6438   -0.4987   -0.3692    0.2053   -0.4401    0.021    1.14    1.45    0.005    .75;... %15
+%        0.4716   0.4537   -0.4078   -0.5869    0.3478   -0.4867    0.021    1.14    1.45    0.005    .75;... %30
+%        0.6205   0.3015   -0.4649   -0.5350    0.5094   -0.5717    0.021    1.14    1.45    0.005    .75;... %45
+%        0.7153   0.2140   -0.4723   -0.5262    0.6386   -0.6804    0.021    1.14    1.45    0.005    .75;... %60
+%        0.7967   0.1353   -0.5212   -0.3288    0.7760   -0.9740    0.021    1.14    1.45    0.005    .75;... %75
+%        0.9333   0.0505   -0.9982   -0.0009    1.5275   -1.6366    0.021    1.14    1.45    0.005    .75]'; %90
+% filepath = 'all_grouser_data.mat'; %load grouser data
+% rovername = 'K10_mini_grouser'; %Grousered wheel
 
 %Tune over both slip and skid conditions for each slip angle separately
 for i=1:length(betas)
     % Load Wheel Data
-    clearvars -except i betas Vrys filepath tuned_results x0s rovername
+    clearvars -except i betas Vrys filepath tuned_results x0s rovername pool
     load(filepath); %load grouser data
     x0 = x0s(:,i);
 
     %Average the data and extract just the slip angle we want
-    [Fx_data, Fy_data, Fz_data, Z_data, slip_data, V_data, Vry_data, angle_data, ~, ~, ~, ~, ~,~] = average_data_to_model(all_results, betas, Vrys);
+    [Fx_data, Fy_data, Fz_data, Z_data, slip_data, V_data, Vry_data, angle_data, ~, ~, ~,~] = average_data_to_model(all_results, betas, Vrys);
     Fx_data = Fx_data(:,i);
     Fy_data = Fy_data(:,i);
     Fz_data = Fz_data(:,i);
@@ -62,7 +62,7 @@ for i=1:length(betas)
     %without modification
     all_results = [];
     for j=1:length(Vrys)
-        result.avg_Fx = -Fy_data(j);
+        result.avg_Fx = Fy_data(j);
         result.avg_Fy = -Fx_data(j);
         result.avg_Fz = -Fz_data(j);
         result.avg_Z = -Z_data(j);
@@ -97,3 +97,4 @@ for i=1:length(betas)
     tuned_results = [tuned_results; all_results'];
 end
 warning('on', 'MATLAB:singularMatrix'); %put the warnings back on
+

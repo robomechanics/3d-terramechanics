@@ -34,7 +34,7 @@ while abs(W-Fz) > abs(err) %.1% error on force balance
         else %skid
             s = (params.state.w*params.rover.r_s - V)/(V); 
         end
-        fprintf('Unable to find sinkage for beta = %.f s = %.1f\n', -rad2deg(params.state.beta), s)
+        fprintf('Unable to find sinkage for beta = %.f s = %.1f, current Fz = %.4f, desired Fz = %.4f\n', rad2deg(params.state.beta), s, Fz, W)
         params.terr.sinkage_found = 0; %Note that we did not find the sinkage correctly here
         break
     end

@@ -28,8 +28,10 @@ nonlcon = []; %No nonlinear constraints
 % if isempty(x0) %if we haven't passed in starting values, use these
 %    x0 = [.2108 .6675 -.1207 -.2512 .1500 -.0859 .0135 2.3026 2.4215 .0924 2.2121]'; %Starting guesses, x = [a0 a1 b0 b1 theta_m0 theta_r0 K c n0 n1 n2]'
 % end
-    %options = optimoptions(@fmincon, 'Algorithm', 'sqp', 'Display', 'iter','OptimalityTolerance', 1e-16, 'FunctionTolerance', 1e-16, 'StepTolerance', 1e-16, 'DiffMinChange', 1e-16, 'FiniteDifferenceStepSize', 1e-6); %Saved as a comment as a record of the settings I have tried playing with
-options = optimoptions(@fmincon, 'Algorithm', 'interior-point', 'Display', 'iter', 'ConstraintTolerance', 1e-6, 'OptimalityTolerance', 1e-3, 'FiniteDifferenceStepSize', 1e-9); %Sets the options for fmincon, algorithm choice shouldn't affect much
+%options = optimoptions(@fmincon, 'Algorithm', 'sqp', 'Display', 'iter','OptimalityTolerance', 1e-16, 'FunctionTolerance', 1e-16, 'StepTolerance', 1e-16, 'DiffMinChange', 1e-16, 'FiniteDifferenceStepSize', 1e-6); %Saved as a comment as a record of the settings I have tried playing with
+
+
+options = optimoptions(@fmincon, 'Algorithm', 'interior-point', 'Display', 'iter', 'ConstraintTolerance', 1e-6, 'OptimalityTolerance', 1e-3, 'FiniteDifferenceStepSize', 1e-9, 'UseParallel', true); %Sets the options for fmincon, algorithm choice shouldn't affect much
 [x, fval, exitflag] = fmincon(@(x)a_b_tuning_objective_fn(x, params, all_results), x0, A, b, Aeq, beq, lb, ub, nonlcon, options);
 
 

@@ -27,7 +27,6 @@ elseif strcmp(rovername,'K10_mini_smooth') %This is actually values for the adju
     params.rover.r_s = params.rover.r + params.rover.h_g; %shearing radius for soil under wheel in m, guesstimated
     params.rover.r_s = params.rover.r*1.02; 
     params.rover.zeta = .1; %volume fraction of grousers for trench soil transport
-    fprintf('r_s = 1.02r\n')
     
 elseif strcmp(rovername,'WD2')
     params.rover.r = .25; %[m]

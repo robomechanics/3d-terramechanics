@@ -15,7 +15,7 @@ beta = params.state.beta;
 theta_f = params.terr.theta_f;
 theta_r = params.terr.theta_r;
 
-hh = min(2*r_s*cos(theta), (sin(theta) - sin(theta_r))/(sin(theta_f) - sin(theta_r))*r_s*(cos(theta_r) - cos(theta_f)) - r_s*(cos(theta_r) - cos(theta))); 
+hb = min(2*r_s*cos(theta), (sin(theta) - sin(theta_r))/(sin(theta_f) - sin(theta_r))*r_s*(cos(theta_r) - cos(theta_f)) - r_s*(cos(theta_r) - cos(theta))); 
 
 if params.options.ishigami_sidewall
     hh = r_s*(cos(theta) - cos(theta_f));
@@ -23,7 +23,7 @@ if params.options.ishigami_sidewall
     D2 = cot(X_c) + (cot(X_c)^2)/cot(phi);
     Rb = D1*(c*hh + D2*rho*hh^2/2);
 else
-    Rb = 1/2*rho*hh.^2*(cot(X_c)^2)*(1 + cot(X_c)*tan(phi)/2) + 2*hh.*c*cot(X_c); %Wong 2008
+    Rb = 1/2*rho*hb.^2*(cot(X_c)^2)*(1 + cot(X_c)*tan(phi)/2) + 2*hb.*c*cot(X_c); %Wong 2008
     Rb = Rb*abs(sin(beta)); 
 end
 
@@ -36,3 +36,4 @@ end
 if (theta == params.terr.theta_f) || (theta == params.terr.theta_r) 
     Rb = 0;
 end
+Rb = Rb;

@@ -2,7 +2,7 @@
 %to calculate mean and standard deviation values for each (slip angle, slip
 %ratio) pair. Also extracts the tuned constants and returns them in the
 %same format.
-function [Fxs, Fys, Fzs, Zs, slips, V_means, Vry_means, angle_means, a0s, a1s, b0s, b1s, theta_m0s, theta_r0s] = average_data_to_model(all_results, betas, Vrys)
+function [Fxs, Fys, Fzs, Zs, slips, V_means, Vry_means, angle_means, a0s, a1s, b0s, b1s] = average_data_to_model(all_results, betas, Vrys)
 
 Fx_means = zeros(length(betas), length(Vrys));
 Fx_stds = zeros(length(betas), length(Vrys));
@@ -24,8 +24,6 @@ a0s = zeros(length(betas), length(Vrys));
 a1s = zeros(length(betas), length(Vrys));
 b0s = zeros(length(betas), length(Vrys));
 b1s = zeros(length(betas), length(Vrys));
-theta_m0s = zeros(length(betas), length(Vrys));
-theta_r0s = zeros(length(betas), length(Vrys));
 
 temp = [];
 Fx = [];
@@ -79,8 +77,6 @@ for j=1:length(betas)
             a1s(j,k) = datapt.a1;
             b0s(j,k) = datapt.b0;
             b1s(j,k) = datapt.b1;
-            theta_m0s(j,k) = datapt.theta_m0;
-            theta_r0s(j,k) = datapt.theta_r0;
         end
         
         temp = [];
@@ -109,5 +105,3 @@ a0s = a0s';
 a1s = a1s';
 b0s = b0s';
 b1s = b1s';
-theta_m0s = theta_m0s';
-theta_r0s = theta_r0s';
