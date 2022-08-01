@@ -26,20 +26,20 @@ for i=1:length(all_results)
     %Extract measured forces to compare model prediction to
     datapt = all_results(i);
     avg_Fx = -datapt.avg_Fy/1000;
-    avg_Fy = -datapt.avg_Fx/1000;
+    avg_Fy = datapt.avg_Fx/1000;
     avg_Fz = -datapt.avg_Fz/1000;
 
     %Extract measured speeds, angles and sinkages to feed into the model
     %prediction
     V = datapt.avg_Vx/1000;
     w = datapt.avg_Vry/1000/params.rover.r;
-    h = double(-datapt.avg_Z/1000);
-    beta = -deg2rad(datapt.beta); %Note that this uses the commanded angle rather than the measured angle, which is avg_angle
+    h = -double(datapt.avg_Z/1000);
+    beta = deg2rad(datapt.beta); %Note that this uses the commanded angle rather than the measured angle, which is avg_angle
 
 
     %Set values for model to run on
     params.state.v_x = V*cos(beta);
-    params.state.v_y = V*sin(beta);
+    params.state.v_y = -V*sin(beta);
     params.state.w = w;
     params.state.beta = beta;
     params.terr.h = h;
@@ -58,7 +58,6 @@ for i=1:length(all_results)
     %             %err = (imag(err)*10^10)
     %             err;
     %         end
-
 end
 error = double(error);
 
