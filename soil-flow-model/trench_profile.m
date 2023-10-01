@@ -117,6 +117,12 @@ if beta<0
     soil_points3 = flipud(soil_points3);
 end
 
+%If soil profile is totally flat remove excess points and simplify to just
+%endpoint
+if all(soil_points1(:, 2) == 0)
+    soil_points1 = [soil_points1(1,:); soil_points1(end,:)];
+end
+
 %Find intersection of rear of wheel with soil
 ip_left = []; %list of all intersection points
 for i = 1:length(soil_points1) - 1
@@ -128,7 +134,7 @@ for i = 1:length(soil_points1) - 1
         for j=1:n
             if sign(new_ip(j,1) - w_left_center(1)) == sign(-beta) %only take intersection points on the rear of the wheel
                 temp = [temp; new_ip(j,:)]; 
-            elseif (abs((new_ip(j,1) - w_left_center(1)))) < 10e-9 %Catch numerical error when the intersection point is right below wheel center, always true for beta=0 and some flat bottom trenches
+            elseif (abs((new_ip(j,1) - w_left_center(1)))) < 10e-6 %Catch numerical error when the intersection point is right below wheel center, always true for beta=0 and some flat bottom trenches
                 temp = [temp; new_ip(j,:)];
             end
         end
@@ -156,7 +162,7 @@ for i = 1:length(soil_points1) - 1
         for j=1:n
             if (sign(new_ip(j,1) - w_right_center(1)) == sign(-beta)) 
                 temp = [temp; new_ip(j,:)];
-            elseif (abs((new_ip(j,1) - w_right_center(1)))) < 10e-9  %Catch numerical error when the intersection point is right below wheel center, always true for beta=0 and some flat bottom trenches
+            elseif (abs((new_ip(j,1) - w_right_center(1)))) < 10e-6  %Catch numerical error when the intersection point is right below wheel center, always true for beta=0 and some flat bottom trenches
                 temp = [temp; new_ip(j,:)];
             end
         end

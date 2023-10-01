@@ -50,9 +50,12 @@ j_t = [];               %Tangential shear deformation module [m]
 Rb = [];                %Bulldozing stress on side face of wheel [kPa]
 h = [];                 %Sinkage of wheel [m]
 sinkage_found = [];     %Whether the sinkage finding routine worked, if we used it
+Fx = [];                %Computed value of force on wheel along wheel's x axis (forward)
+Fy = [];                %Computed value of force on wheel along wheel's y axis (side face)
+Fz = [];                %Computed value of force on wheel along wheel's z axis (up)
 
 
-terr_fieldnames = {'fieldnames', 'theta_f', 'theta_r', 'theta_m', 'sigma', 'tau_l', 'tau_t', 'j_l', 'j_t', 'Rb', 'h', 'sinkage_found'};
+terr_fieldnames = {'fieldnames', 'theta_f', 'theta_r', 'theta_m', 'sigma', 'tau_l', 'tau_t', 'j_l', 'j_t', 'Rb', 'h', 'sinkage_found', 'Fx', 'Fy', 'Fz'};
 terr = v2struct(terr_fieldnames);
 
 
@@ -66,7 +69,16 @@ theta_m0 = [];          %Constant value of theta_m for a given slip angle for al
 theta_r0 = [];          %Constant value of theta_r for a given slip angle for all skid values
 theta_f0 = [];          %Not actually tuned, this is the entrance angle for the given beta at slip=0
 
-tuned_fieldnames = {'fieldnames', 'a0', 'a1', 'b0', 'b1', 'theta_m0', 'theta_r0', 'theta_f0'};
+a_c = [];
+a_b = [];
+a_s = [];
+a_sb = [];
+b_c = [];
+b_b = [];
+b_s = [];
+b_sb = [];
+
+tuned_fieldnames = {'fieldnames', 'a0', 'a1', 'b0', 'b1', 'theta_m0', 'theta_r0', 'theta_f0', 'a_c', 'a_b', 'a_s', 'a_sb', 'b_c', 'b_b', 'b_s', 'b_sb'};
 tuned = v2struct(tuned_fieldnames);
 
 
@@ -77,19 +89,20 @@ slip = [];              %Slip ratio of wheel []
 w = [];                 %Rotational (angular) velocity of wheel [rad/s]
 v_x = [];               %Forward velocity of wheel [m/s]
 v_y = [];               %Sideways velocity of wheel [m/s]
-rover_w = 0;            %Angular velocity of COM of rover [rad/s]
-rover_vx = [];          %Forward velocity of COM of rover [m/s]
-rover_vy = [];          %Sideways velocity of COM of rover [m/s]
+rover_w = 0;            %Yaw angular velocity of COM of rover [rad/s]
+rover_v_x = [];          %Forward velocity of COM of rover [m/s]
+rover_v_y = [];          %Sideways velocity of COM of rover [m/s]
 
-state_fieldnames = {'fieldnames', 'beta', 'slip', 'w', 'v_x', 'v_y', 'rover_w', 'rover_vx', 'rover_vy'};
+state_fieldnames = {'fieldnames', 'beta', 'slip', 'w', 'v_x', 'v_y', 'rover_w', 'rover_v_x', 'rover_v_y'};
 state = v2struct(state_fieldnames);
 
 %initialize model options (these values should never change during model
 %evaluation, they are initialized to default values so that they must be consciously set otherwise)
 trench_on = 1;
 ishigami_sidewall = 0;
+linear_tuning_params = 0;
 
-options_fieldnames = {'fieldnames', 'trench_on', 'ishigami_sidewall'};
+options_fieldnames = {'fieldnames', 'trench_on', 'ishigami_sidewall', 'linear_tuning_params'};
 options = v2struct(options_fieldnames);
 
 

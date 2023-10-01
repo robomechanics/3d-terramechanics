@@ -20,6 +20,7 @@ end
 
 
 tau = sign(jl)*abs(vjl)/sqrt(vjl^2+vjt^2)*(c + sig*tan(phi))*temp;
+tau = (vjl)/sqrt(vjl^2+vjt^2)*(c + sig*tan(phi))*temp;
 if vjl == 0
     tau = 0; %case where theta=theta_0 and beta=0 -> vjx = 0, which would give NaN
 end

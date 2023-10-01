@@ -65,7 +65,7 @@ if (hg == 0)
     hg = params.rover.r_s-r; %TODO: better approximation for shearing radius
     mu = 1;
 end
-Arot = 2*pi*r*omega*mu*b*hg/vx*zeta; %amount of soil transported by rotating grousers, assuming less than max amount is moved
+Arot = max(2*pi*r*omega*mu*b*hg/vx*zeta,0); %amount of soil transported by rotating grousers, assuming less than max amount is moved. Guarantees positive value in case of negative w input
 
 
 %Low angle:

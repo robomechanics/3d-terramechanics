@@ -18,6 +18,7 @@ if temp > 1
 end
 
 tau = sign(jt)*abs(vjt)/sqrt(vjt^2+vjl^2)*(c + sig*tan(phi))*temp;
+tau = (vjt)/sqrt(vjt^2+vjl^2)*(c + sig*tan(phi))*temp;
 if vjt == 0
     tau = 0; %case where theta=theta_0, otherwise we get NaN if vjy is also 0 (when beta = 0)
 end
