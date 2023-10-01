@@ -20,7 +20,7 @@ points_g = all_results;
 [points_beta_index_g, points_slip_data_g, points_Fx_data_g, points_Fy_data_g, points_Z_data_g] = sort_data_to_plot(points_g, betas, Vrys);
 
 %Load and average smooth data
-load('trench_off_smooth.mat') %Processed data for modeling
+load('trench_off_smooth_new.mat') %Processed data for modeling
 all_results_s = tuned_results;
 [Fx_data_s, Fy_data_s, Fz_data_s, Z_data_s, slip_data_s, V_data_s, Vry_data_s, angle_data_s, a0s_s, a1s_s, b0s_s, b1s_s] = average_data_to_model(all_results_s, betas, Vrys);
 load('all_smooth_data.mat'); %Individual data points for plotting

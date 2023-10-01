@@ -17,7 +17,7 @@ while abs(W-Fz) > abs(err) %.1% error on force balance
     h = (h_max + h_min)/2; %update the value to test
     params.terr.h = h;
     params = update_thetas(params);
-    [~, ~, Fz, params] = forces(params);
+    [~, ~, Fz, ~, ~, ~, params] = forces_moments(params);
     if imag(Fz) ~= 0 %Generally corresponds to theta_m0 > theta_f, so we need a larger sinkage
         h_min = h;
     elseif Fz < W
